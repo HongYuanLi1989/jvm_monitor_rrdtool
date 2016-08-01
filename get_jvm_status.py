@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 
 import subprocess
+from jvm_rrdtool import RRDController
+import os
+import time
+import sys
+
 class Jprocess:
     def __init__(self, arg):
         self.pdict = {
@@ -44,7 +49,7 @@ class Jprocess:
     def get_jstats(self):
         if self.pdict['pid'] == '':
             return False
-        print self.pdict['pid']
+        #print self.pdict['pid']
         self.pdict.update(self.fill_jstat("-gc"))
         self.pdict.update(self.fill_jstat("-gccapacity"))
         self.pdict.update(self.fill_jstat("-gcutil"))
@@ -54,7 +59,7 @@ class Jprocess:
         stdout, stderr = jstatout.communicate()
         legend, data = stdout.split('\n',1)
         mydict = dict(zip(legend.split(), data.split()))
-        print mydict
+        #print mydict
         return mydict
     def compute_jstats(self):
         if self.pdict['pid'] == "":
@@ -97,13 +102,54 @@ class Jprocess:
 
 if __name__ == '__main__':
 
-    # print get_jvm_gcutil_status()
-    # print get_jvm_gc_status()
-    # print get_jvm_gccapacity_status()
+    RRD_PATH = "%s/../../data" % os.path.abspath(os.path.dirname(__file__))
+    STATIC_PATH = "%s/../../media/image" % os.path.abspath(os.path.dirname(__file__))
+
+    rrdfile = RRD_PATH + "/heap_memory.rrd"
+    imgdir = STATIC_PATH + "/heap_memory"
+
+    if not (os.path.isdir(imgdir)):
+        os.makedirs(imgdir)
+    
+    rrd = RRDController(rrdfile=rrdfile, static_path=imgdir)
+    rrd.create()
+
     jproc = Jprocess("test")
     pid = jproc.check_proc()
 
     jproc.get_jstats()
     jproc.compute_jstats()
-
+    zdict = jproc.zdict
     print jproc.zdict
+    rrd.update(
+    YGCT_avg=float(zdict['YGCT_avg']),
+    Heap_used=float(zdict['Heap_used']),
+    S0_used=float(zdict['S0_used']),
+    S0_max=float(zdict['S0_max']),
+    S0_ratio=float(zdict['S0_ratio']),
+    S1_used=float(zdict['S1_used']),
+    S1_max=float(zdict['S1_max']),
+    S1_ratio=float(zdict['S1_ratio']),
+    Old_used=float(zdict['Old_used']),
+    Old_max=float(zdict['Old_max']),
+    Old_ratio=float(zdict['Old_ratio']),
+    Eden_used=float(zdict['Eden_used']),
+    Eden_max=float(zdict['Eden_max']),
+    Eden_ratio=float(zdict['Eden_ratio']),
+    Metadata_used=float(zdict['Metadata_used']),
+    Metadata_max=float(zdict['Metadata_max']),
+    Metadata_ratio=float(zdict['Metadata_ratio']),
+    Heap_max=float(zdict['Heap_max']),
+    Heap_ratio=float(zdict['Heap_ratio']),
+    YGC=float(zdict['YGC']),
+    FGC=float(zdict['FGC']),
+    YGCT=float(zdict['YGCT']) ,
+    FGCT=float(zdict['FGCT']) ,
+    GCT=float(zdict['GCT']),
+    FGCT_avg=float(zdict['FGCT_avg']),
+    GCT_avg=float(zdict['GCT_avg'])
+    )
+    rrd.graph(period='day')
+    print jproc.zdict
+    #print jproc.pdict
+    
