@@ -125,8 +125,8 @@ class RRDController(object):
 		imgname = self.static_path + "/" + img
 		start = '-1'+period
 
-		g = Graph(imgname, imgformat='PNG', step=start, vertical_label='KB', color=ca, width=700, height=350)
-
+		#g = Graph(imgname, imgformat='PNG', step=start, vertical_label='KB', color=ca, width=700, height=350)
+		g = Graph(imgname, imgformat='PNG', step=start, vertical_label='Units_KB', color=ca, width=700, height=400, units_exponent=6, base=1024, title="JVM_HEAP_USED")
 		g.data.extend([def1, vdef1, vdef2, vdef3, vdef4, line1, gprint1, gprint2, gprint3, gprint4])
 		g.data.extend([def2, max_vdef1, max_vdef2, max_vdef3, max_vdef4, line2, max_gprint1, max_gprint2, max_gprint3, max_gprint4])
 		g.data.extend([def3, eden_used_vdef1, eden_used_vdef2, eden_used_vdef3, eden_used_vdef4, line3, eden_used_gprint1, eden_used_gprint2, eden_used_gprint3, eden_used_gprint4])
