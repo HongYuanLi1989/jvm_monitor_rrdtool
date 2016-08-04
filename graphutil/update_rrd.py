@@ -1,14 +1,19 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Date    : 2016-08-03 16:54:31
+# @Author  : LiHongyuan (hy.li@8win.com)
+
 from pyrrd.rrd import RRD, RRA, DS
 from pyrrd.graph import DEF, CDEF, VDEF
 from pyrrd.graph import LINE, AREA, GPRINT
 from pyrrd.graph import ColorAttributes, Graph
-
-import os, logging, time
-
+import os
+import logging
+import time
 class RRDController(object):
 
 	def __init__(self, rrdfile, static_path):
+
 		self.rrdfile = rrdfile
 		self.static_path = static_path
 
@@ -62,93 +67,4 @@ class RRDController(object):
 	def update(self, GCT_avg, S1_max, S1_ratio, Old_max, Heap_max, YGCT_avg, FGCT_avg, FGC, Metadata_used, Heap_used, Eden_max, Old_used, Eden_used, YGC, YGCT, Eden_ratio, S0_used, Metadata_max, FGCT, Old_ratio, Heap_ratio, S0_ratio, S1_used, S0_max, Metadata_ratio, GCT):
 		self.rrd.bufferValue("%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d:%d" %(time.time(),GCT_avg, S1_max, S1_ratio, Old_max, Heap_max, YGCT_avg, FGCT_avg, FGC, Metadata_used, Heap_used, Eden_max, Old_used, Eden_used, YGC, YGCT, Eden_ratio, S0_used, Metadata_max, FGCT, Old_ratio, Heap_ratio, S0_ratio, S1_used, S0_max, Metadata_ratio, GCT))
 		self.rrd.update(template="GCT_avg:S1_max:S1_ratio:Old_max:Heap_max:YGCT_avg:FGCT_avg:FGC:Metadata_used:Heap_used:Eden_max:Old_used:Eden_used:YGC:YGCT:Eden_ratio:S0_used:Metadata_max:FGCT:Old_ratio:Heap_ratio:S0_ratio:S1_used:S0_max:Metadata_ratio:GCT",debug=True)
-		
-	def graph_request(self, period='day'):
-		pass
 
-	def grap_heap_Memory(self, period='day'):
-		def1=DEF(rrdfile=self.rrdfile, vname="Heap_used", dsName="Heap_used", cdef="AVERAGE")
-		def2=DEF(rrdfile=self.rrdfile, vname="Heap_max", dsName="Heap_max" ,cdef="AVERAGE")
-		def3=DEF(rrdfile=self.rrdfile, vname="Eden_used", dsName="Eden_used", cdef="AVERAGE")
-
-		vdef1 = VDEF(vname="max", rpn='Heap_used,MAXIMUM')
-		vdef2 = VDEF(vname="avg", rpn='Heap_used,AVERAGE')
-		vdef3 = VDEF(vname="last", rpn='Heap_used,LAST')
-		vdef4 = VDEF(vname="min", rpn='Heap_used,MINIMUM')
-
-		area1 = AREA(defObj=def1, color='#22FF22', legend='Heap_Used')
-
-		gprint1 = GPRINT(vdef1, "Max\\: %5.1lf %s")
-		gprint2 = GPRINT(vdef2, "Avg\\: %5.1lf %s")
-		gprint3 = GPRINT(vdef3, "Current\\: %5.1lf %s")
-		gprint4 = GPRINT(vdef4, "Min\\: %5.1lf %s\\n")
-
-		max_vdef1 = VDEF(vname="heap_max", rpn='Heap_max,MAXIMUM')
-		max_vdef2 = VDEF(vname="heap_avg", rpn='Heap_max,AVERAGE')
-		max_vdef3 = VDEF(vname="heap_last", rpn='Heap_max,LAST')
-		max_vdef4 = VDEF(vname="heap_min", rpn='Heap_max,MINIMUM')
-
-
-		line2 = LINE(3, defObj=def2, color='#0022FF', legend='Heap_max')
-
-		max_gprint1 = GPRINT(max_vdef1, "Max\\: %5.1lf %s")
-		max_gprint2 = GPRINT(max_vdef2, "Avg\\: %5.1lf %s")
-		max_gprint3 = GPRINT(max_vdef3, "Current\\: %5.1lf %s")
-		max_gprint4 = GPRINT(max_vdef4, "Min\\: %5.1lf %s\\n")
-
-		eden_used_vdef1 = VDEF(vname="eden_used_max", rpn='Eden_used,MAXIMUM')
-		eden_used_vdef2 = VDEF(vname="eden_used_avg", rpn='Eden_used,AVERAGE')
-		eden_used_vdef3 = VDEF(vname="eden_used_last", rpn='Eden_used,LAST')
-		eden_used_vdef4 = VDEF(vname="eden_used_min", rpn='Eden_used,MINIMUM')
-
-
-		line3 = LINE(2, defObj=def3, color='#CC22FF', legend='Eden_used')
-
-		eden_used_gprint1 = GPRINT(eden_used_vdef1, "Max\\: %5.1lf %s")
-		eden_used_gprint2 = GPRINT(eden_used_vdef2, "Avg\\: %5.1lf %s")
-		eden_used_gprint3 = GPRINT(eden_used_vdef3, "Current\\: %5.1lf %s")
-		eden_used_gprint4 = GPRINT(eden_used_vdef4, "Min\\: %5.1lf %s\\n")
-
-
-		ca = ColorAttributes()
-		ca.back = '#333333'
-		ca.canvas = '#333333'
-		ca.shadea = '#000000'
-		ca.shadeb = '#111111'
-		ca.mgrid = '#CCCCCC'
-		ca.axis = '#FFFFFF'
-		ca.frame = '#AAAAAA'
-		ca.font = '#FFFFFF'
-		ca.arrow = '#FFFFFF'
-
-		img = "heap_used_%s.png" % period
-		imgname = self.static_path + "/" + img
-		start = '-1'+period
-
-		#g = Graph(imgname, imgformat='PNG', step=start, vertical_label='KB', color=ca, width=700, height=350)
-		g = Graph(imgname, imgformat='PNG', step=start, vertical_label='Units_B', x_grid="MINUTE:10:HOUR:1:HOUR:4:0:%X", alt_y_grid=True, rigid=True, color=ca, width=700, height=400, units_exponent=6, base=1024, title="JVM_HEAP_USED")
-		g.data.extend([def1, vdef1, vdef2, vdef3, vdef4, area1, gprint1, gprint2, gprint3, gprint4])
-		g.data.extend([def2, max_vdef1, max_vdef2, max_vdef3, max_vdef4, line2, max_gprint1, max_gprint2, max_gprint3, max_gprint4])
-		g.data.extend([def3, eden_used_vdef1, eden_used_vdef2, eden_used_vdef3, eden_used_vdef4, line3, eden_used_gprint1, eden_used_gprint2, eden_used_gprint3, eden_used_gprint4])
-
-		g.write()
-		g2 = Graph
-
-	def graph(self, period='day'):
-		self.grap_heap_Memory(period)
-
-
-
-
-
-
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
