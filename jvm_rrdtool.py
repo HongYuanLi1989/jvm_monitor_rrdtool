@@ -47,6 +47,8 @@ class RRDController(object):
 
 		dss.extend([ds1, ds2, ds3, ds4, ds5, ds6, ds7, ds8, ds9, ds10, ds11, ds12, ds13, ds14, ds15, ds16, ds17, ds18, ds19, ds20, ds21, ds22, ds23, ds24, ds25, ds26])
 
+		print dss
+
 		rras = []
 		rra1 = RRA(cf="AVERAGE", xff=0.5, steps=1, rows=2880)
 		rra2 = RRA(cf="AVERAGE", xff=0.5, steps=30, rows=672)
@@ -55,6 +57,7 @@ class RRDController(object):
 
 		rras.extend([rra1, rra2, rra3, rra4])
 
+		print rras
 		self.rrd = RRD(self.rrdfile, step=60, ds=dss, rra=rras)
 		self.rrd.create(debug=False)
 		time.sleep(2)
@@ -126,7 +129,7 @@ class RRDController(object):
 		start = '-1'+period
 
 		#g = Graph(imgname, imgformat='PNG', step=start, vertical_label='KB', color=ca, width=700, height=350)
-		g = Graph(imgname, imgformat='PNG', step=start, vertical_label='Units_B', x_grid="MINUTE:10:HOUR:1:HOUR:4:0:%X", alt_y_grid=True, rigid=True, color=ca, width=700, height=400, units_exponent=6, base=1024, title="JVM_HEAP_USED")
+		g = Graph(imgname, imgformat='PNG', step=start, vertical_label='Units_B', color=ca, width=700, height=400,  units_exponent=6, base=1024, title="JVM_HEAP_USED")
 		g.data.extend([def1, vdef1, vdef2, vdef3, vdef4, area1, gprint1, gprint2, gprint3, gprint4])
 		g.data.extend([def2, max_vdef1, max_vdef2, max_vdef3, max_vdef4, line2, max_gprint1, max_gprint2, max_gprint3, max_gprint4])
 		g.data.extend([def3, eden_used_vdef1, eden_used_vdef2, eden_used_vdef3, eden_used_vdef4, line3, eden_used_gprint1, eden_used_gprint2, eden_used_gprint3, eden_used_gprint4])

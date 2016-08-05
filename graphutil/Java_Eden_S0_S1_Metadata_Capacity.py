@@ -43,7 +43,7 @@ def graph(period='day'):
 	gprint3 = GPRINT(vdef3, "Current\\: %5.1lf %s")
 	gprint4 = GPRINT(vdef4, "Min\\: %5.1lf %s\\n")
 
-	line1 = LINE(1,defObj=def1, color='#22FF22', legend='S0_max')
+	line1 = LINE(1,defObj=def1, color='#0E0BEE', legend='S0_max')
 
 	s1_vdef1 = VDEF(vname="s1_max", rpn='S1_max,MAXIMUM')
 	s1_vdef2 = VDEF(vname="s1_avg", rpn='S1_max,AVERAGE')
@@ -98,7 +98,7 @@ def graph(period='day'):
 
 	#g = Graph(imgname, imgformat='PNG', step=start, vertical_label='KB', color=ca, width=700, height=350)
 	#g = Graph(imgname, imgformat='PNG', step=start, vertical_label='Units_B', color=ca, width=700, height=400, units_exponent=6, base=1024, title=title)
-	g = Graph(imgname, imgformat='PNG', step=start, vertical_label='Units_B', x_grid="MINUTE:10:HOUR:1:HOUR:4:0:%X", alt_y_grid=True, rigid=True, color=ca, width=700, height=400, units_exponent=6, base=1024, title=title)
+	g = Graph(imgname, imgformat='PNG', step=start, vertical_label='Units_B', x_grid="MINUTE:10:HOUR:1:HOUR:1:0:%X", color=ca, width=700, height=400, units_exponent=6, base=1024, title=title)
 	g.data.extend([def1, vdef1, vdef2, vdef3, vdef4, line1, gprint1, gprint2, gprint3, gprint4])
 	g.data.extend([def2, s1_vdef1, s1_vdef2, s1_vdef3, s1_vdef4, line2, s1_gprint1, s1_gprint2, s1_gprint3, s1_gprint4])
 	g.data.extend([def3, eden_vdef1, eden_vdef2, eden_vdef3, eden_vdef4, line3, eden_gprint1, eden_gprint2, eden_gprint3, eden_gprint4])

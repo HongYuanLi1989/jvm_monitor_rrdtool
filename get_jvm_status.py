@@ -5,6 +5,7 @@ from jvm_rrdtool import RRDController
 import os
 import time
 import sys
+import socket
 
 class Jprocess:
     def __init__(self, arg):
@@ -87,6 +88,8 @@ class Jprocess:
         self.zdict['YGCT'] = format(float(self.pdict['YGCT']),'0.3f')
         self.zdict['FGCT'] = format(float(self.pdict['FGCT']),'0.3f')
         self.zdict['GCT'] = format(float(self.pdict['GCT']),'0.3f')
+        self.zdict['Process_Name'] = self.pdict['jpname']
+        self.zdict['ipaddress'] = socket.gethostbyname(socket.getfqdn(socket.gethostname()))
         if self.pdict['YGC'] == '0':
             self.zdict['YGCT_avg'] = '0'
         else:
@@ -114,7 +117,7 @@ if __name__ == '__main__':
     rrd = RRDController(rrdfile=rrdfile, static_path=imgdir)
     rrd.create()
 
-    jproc = Jprocess("test")
+    jproc = Jprocess("service_account")
     pid = jproc.check_proc()
 
     jproc.get_jstats()
