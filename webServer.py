@@ -22,8 +22,8 @@ def graphImage():
 	pass
 
 @app.route('/upload/', methods=['POST'])
-def utilData(data):
-	data = request.data()
+def utilData():
+	data = request.json
 	return render_template('index.html',data=data)
 
 if __name__ == '__main__':
