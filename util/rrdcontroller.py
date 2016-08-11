@@ -14,51 +14,14 @@ class RRDController(object):
 	def __init__(self, rrdfile, static_path):
 		self.rrdfile = rrdfile
 		self.static_path = static_path
-
-		print self.rrdfile,self.static_path
+		#print type(self.rrdfile),type(self.static_path)
+		#print self.rrdfile,self.static_path
 
 	def create(self):
 		if os.path.isfile(self.rrdfile) is not True:
+			print self.rrdfile
+			self.rrd = rrdtool.create(self.rrdfile, '--step', '30', '--start',cur_time, 'DS:GCT_avg:GAUGE:120:0:U','DS:Eden_ratio:GAUGE:120:0:U','DS:S1_max:GAUGE:120:0:U','DS:S1_ratio:GAUGE:120:0:U',	'DS:Old_max:GAUGE:120:0:U',	'DS:Heap_max:GAUGE:120:0:U','DS:YGCT_avg:GAUGE:120:0:U','DS:FGCT_avg:GAUGE:120:0:U','DS:FGC:GAUGE:120:0:U',	'DS:Metadata_used:GAUGE:120:0:U','DS:Heap_used:GAUGE:120:0:U','DS:Eden_max:GAUGE:120:0:U','DS:Old_used:GAUGE:120:0:U','DS:Eden_used:GAUGE:120:0:U',	'DS:YGC:GAUGE:120:0:U',	'DS:YGCT:GAUGE:120:0:U','DS:S0_used:GAUGE:120:0:U',	'DS:Metadata_max:GAUGE:120:0:U','DS:FGCT:GAUGE:120:0:U','DS:Old_ratio:GAUGE:120:0:U','DS:Heap_ratio:GAUGE:120:0:U',	'DS:S0_ratio:GAUGE:120:0:U','DS:S1_used:GAUGE:120:0:U',	'DS:Metadata_ratio:GAUGE:120:0:U','DS:GCT:GAUGE:120:0:U','DS:S0_max:GAUGE:120:0:U',	'RRA:AVERAGE:0.5:1:2880','RRA:AVERAGE:0.5:30:672','RRA:AVERAGE:0.5:120:732','RRA:AVERAGE:0.5:720:1460',	'RRA:MIN:0.5:1:2880','RRA:MIN:0.5:30:672','RRA:MIN:0.5:120:732','RRA:MIN:0.5:720:1460',	'RRA:MAX:0.5:1:2880','RRA:MAX:0.5:30:672','RRA:MAX:0.5:120:732','RRA:MAX:0.5:720:1460')
 
-			self.rrd = rrdtool.create(self.rrdfile, '--step', '30', '--start',cur_time, 
-				'DS:GCT_avg:GAUGE:120:0:U',
-				'DS:Eden_ratio:GAUGE:120:0:U',
-				'DS:S1_max:GAUGE:120:0:U',
-				'DS:S1_ratio:GAUGE:120:0:U',
-				'DS:Old_max:GAUGE:120:0:U',
-				'DS:Heap_max:GAUGE:120:0:U',
-				'DS:YGCT_avg:GAUGE:120:0:U',
-				'DS:FGCT_avg:GAUGE:120:0:U',
-				'DS:FGC:GAUGE:120:0:U',
-				'DS:Metadata_used:GAUGE:120:0:U',
-				'DS:Heap_used:GAUGE:120:0:U',
-				'DS:Eden_max:GAUGE:120:0:U',
-				'DS:Old_used:GAUGE:120:0:U',
-				'DS:Eden_used:GAUGE:120:0:U',
-				'DS:YGC:GAUGE:120:0:U',
-				'DS:YGCT:GAUGE:120:0:U',
-				'DS:S0_used:GAUGE:120:0:U',
-				'DS:Metadata_max:GAUGE:120:0:U',
-				'DS:FGCT:GAUGE:120:0:U',
-				'DS:Old_ratio:GAUGE:120:0:U',
-				'DS:Heap_ratio:GAUGE:120:0:U',
-				'DS:S0_ratio:GAUGE:120:0:U',
-				'DS:S1_used:GAUGE:120:0:U',
-				'DS:Metadata_ratio:GAUGE:120:0:U',
-				'DS:GCT:GAUGE:120:0:U', 
-				'DS:S0_max:GAUGE:120:0:U',
-				'RRA:AVERAGE:0.5:1:2880',
-				'RRA:AVERAGE:0.5:30:672',
-				'RRA:AVERAGE:0.5:120:732',
-				'RRA:AVERAGE:0.5:720:1460',
-				'RRA:MIN:0.5:1:2880',
-				'RRA:MIN:0.5:30:672',
-				'RRA:MIN:0.5:120:732',
-				'RRA:MIN:0.5:720:1460',
-				'RRA:MAX:0.5:1:2880',
-				'RRA:MAX:0.5:30:672',
-				'RRA:MAX:0.5:120:732',
-				'RRA:MAX:0.5:720:1460')
 			if self.rrd:
 				print rrdtool.error()
 		else:
