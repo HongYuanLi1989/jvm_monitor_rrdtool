@@ -3,7 +3,6 @@ from pyrrd.rrd import RRD, RRA, DS
 from pyrrd.graph import DEF, CDEF, VDEF
 from pyrrd.graph import LINE, AREA, GPRINT
 from pyrrd.graph import ColorAttributes, Graph
-
 import os, logging, time
 
 class RRDController(object):
