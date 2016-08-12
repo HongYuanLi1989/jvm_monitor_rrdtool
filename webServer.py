@@ -29,6 +29,7 @@ def utilData():
 	# return render_template('index.html',data=data)
     ipAddress = str(data["ipaddress"])
     serviceName = str(data["Process_Name"])
+    jvmType = str(data["jvmType"])
     rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (
         ipAddress, serviceName, serviceName)
     staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (
