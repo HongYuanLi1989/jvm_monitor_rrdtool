@@ -35,21 +35,21 @@ def utilData():
     # return render_template('index.html',data=data)
     ipAddress = str(data["ipaddress"])
     serviceName = str(data["Process_Name"])
-    jvmType = str(data["jvmType"])
+    #jvmType = str(data["jvmType"])
     rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (
         ipAddress, serviceName, serviceName)
-    staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (
-        ipAddress, serviceName, jvmType)
+    #staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (ipAddress, serviceName, jvmType)
+    staticFile = ''
     print "variable type"
-    print type(rrdFile), type(staticFile)
+#    print type(rrdFile), type(staticFile)
     print "------------------------"
     rrd = RRDController(rrdfile=rrdFile, static_path=staticFile)
     if os.path.exists(os.path.dirname(rrdFile)) is not True:
         print os.path.dirname(rrdFile)
         os.makedirs(os.path.dirname(rrdFile))
-    if os.path.exists(os.path.dirname(staticFile)) is not True:
-        print os.path.dirname(staticFile)
-        os.makedirs(os.path.dirname(staticFile))
+    # if os.path.exists(os.path.dirname(staticFile)) is not True:
+    #     print os.path.dirname(staticFile)
+    #     os.makedirs(os.path.dirname(staticFile))
 
     if os.path.isfile(rrdFile) is not True:
         rrd = rrd.create()
@@ -70,11 +70,29 @@ def utilData():
         print "success update value"
     else:
         print "failed update value"
+    #rrd.graphJavaHeapMemory()
 
-    rrd.graphJavaS0S1EdenMetadata()
+    return "update data success"
+#    rrd.graphJavaS0S1EdenMetadata()
 
-    return "graph success"
+#    return "graph success"
 
+@app.route('/getgraph/', methods=["get"])
+def getGraph():
+    ipAddress = str(request.args.get('ip'))
+    jvmType = str(request.args.get('jvmType'))
+    serviceName = str(request.args.get('name'))
+    rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (ipAddress, serviceName, serviceName)
+    print type(rrdFile)
+    staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (ipAddress, serviceName, jvmType)
+    print type(staticFile)
+    rrd = RRDController(rrdfile=rrdFile, static_path=staticFile)
+    graphFunc = 'graph%s' %(jvmType)
+    print graphFunc
+    #graphFunc = 'rrd.%s' %(graphFunc)
+    if hasattr(rrd,graphFunc):
+        getattr(rrd,graphFunc)()
+    return "success"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
