@@ -196,13 +196,13 @@ class RRDController(object):
 		"CDEF:Heap_max_calc=Heap_max,1000000,/",
 		"CDEF:Heap_ratio_calc=Heap_ratio,1,*",
 
-		"AREA:Heap_used_calc#0E0BEE:Heap_used_calc",
+		"AREA:Heap_used_calc#0E0BEE:Heap_used",
 		"GPRINT:Heap_used:MAX:Max\: %5.1lf %S",
 		"GPRINT:Heap_used:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:Heap_used:LAST:Current\: %5.1lf %S",
 		"GPRINT:Heap_used:MIN:Min\: %5.1lf %S\\n",
 
-		"LINE1:Heap_max_calc#00FF00:Heap_max_calc",
+		"LINE1:Heap_max_calc#00FF00:Heap_max",
 		"GPRINT:Heap_max:MAX:Max\: %5.1lf %S",
 		"GPRINT:Heap_max:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:Heap_max:LAST:Current\: %5.1lf %S",
