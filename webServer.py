@@ -78,6 +78,7 @@ def utilData():
 #    return "graph success"
 
 @app.route('/getgraph/', methods=["get"])
+# request example : http://127.0.0.1:5000/getgraph/?ip=192.168.11.129&jvmType=JavaHeapMemory&name=service_account
 def getGraph():
     ipAddress = str(request.args.get('ip'))
     jvmType = str(request.args.get('jvmType'))
