@@ -95,7 +95,7 @@ def getGraph():
     if hasattr(rrd,graphFunc):
         getattr(rrd,graphFunc)()
     #return "success"
-    displayImgName = "%s/%s/%s.png" %(ipAddress, serviceName, jvmType)
+    displayImgName = "img/%s/%s/%s.png" %(ipAddress, serviceName, jvmType)
     print displayImgName
     return render_template('index.html', staticImg=displayImgName, mimetype='image/gif')
 if __name__ == '__main__':
