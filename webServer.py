@@ -70,37 +70,60 @@ def utilData():
         print "success update value"
     else:
         print "failed update value"
-    #rrd.graphJavaHeapMemory()
 
     return "update data success"
-#    rrd.graphJavaS0S1EdenMetadata()
-
-#    return "graph success"
 
 @app.route('/getgraph/', methods=["get"])
+
 # request example : http://127.0.0.1:5000/getgraph/?ip=192.168.11.129&jvmType=JavaHeapMemory&name=service_account
+
 def getGraph():
+    allType = ['JavaS0S1EdenOldMax','JavaAverageGCTime','JavaS0S1EdenOldUsedPercentage','JavaGCEvents','JavaAverageGCTime','JavaHeapMemory','JavaMetadataMemory']
+    imglist= []
     ipAddress = str(request.args.get('ip'))
     jvmType = str(request.args.get('jvmType'))
     serviceName = str(request.args.get('name'))
-    rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (ipAddress, serviceName, serviceName)
-    print type(rrdFile)
-    staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (ipAddress, serviceName, jvmType)
-    print type(staticFile)
-    print staticFile
-    rrd = RRDController(rrdfile=rrdFile, static_path=staticFile)
-    graphFunc = 'graph%s' %(jvmType)
-    print graphFunc
-    #graphFunc = 'rrd.%s' %(graphFunc)
-    if hasattr(rrd,graphFunc):
-        getattr(rrd,graphFunc)()
-    #return "success"
-    displayImgName = "img/%s/%s/%s.png" %(ipAddress, serviceName, jvmType)
-    print displayImgName
-    return render_template('index.html', staticImg=displayImgName, mimetype='image/gif')
+    print type(allType)
+    if jvmType == '':
+        for jvmType in allType:
+            print "for ....--------" + jvmType
+            rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (ipAddress, serviceName, serviceName)
+            staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (ipAddress, serviceName, jvmType)
+            print staticFile
+            rrd = RRDController(rrdfile=rrdFile, static_path=staticFile)
+            print jvmType
+            graphFunc = 'graph%s' %(jvmType)
+            print graphFunc
+            print hasattr(rrd,graphFunc)
+            if hasattr(rrd,graphFunc):
+                print graphFunc+"will be runnnig........."
+                getattr(rrd,graphFunc)()
+                print graphFunc+"is running"
+            displayImgName = "img/%s/%s/%s.png" %(ipAddress, serviceName, jvmType)
+            print displayImgName
+            imglist.append(displayImgName)
+            print imglist
+
+    else:
+        rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (ipAddress, serviceName, serviceName)
+        print type(rrdFile)
+        staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (ipAddress, serviceName, jvmType)
+        print type(staticFile)
+        print staticFile
+        rrd = RRDController(rrdfile=rrdFile, static_path=staticFile)
+        graphFunc = 'graph%s' %(jvmType)
+        print graphFunc
+        if hasattr(rrd,graphFunc):
+            getattr(rrd,graphFunc)()
+        displayImgName = "img/%s/%s/%s.png" %(ipAddress, serviceName, jvmType)
+        imglist.append(displayImgName)
+        print imglist
+        
+    return render_template('index.html', staticImg=imglist, mimetype='image/gif')
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
-
 
 # curl -H "Content-Type:application/json" -d '{"Process_Name":
 # "service_account", "GCT_avg": "0.010", "S1_max": "4194304.00",

@@ -41,8 +41,11 @@ class RRDController(object):
 
 	def graphJavaS0S1EdenOldMax(self):
 		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Bytes",
-		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H",
+		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java S0_S1_Eden_Old Max",
+		"--color", "ARROW#FFFFFF", "--color", "AXIS#FFFFFF", "--color", "BACK#333333",
+		"--color", "CANVAS#333333", "--color", "FONT#FFFFFF", "--color", "FRAME#AAAAAA", 
+		"--color", "MGRID#CCCCCC", "--color", "SHADEA#000000", "--color", "SHADEB#111111",
 		"DEF:S0_max="+self.rrdfile+":S0_max:AVERAGE",
 		"DEF:S1_max="+self.rrdfile+":S1_max:AVERAGE",
 		"DEF:Eden_max="+self.rrdfile+":Eden_max:AVERAGE",
@@ -75,8 +78,11 @@ class RRDController(object):
 		#YGCT_avg,FGCT_avg,GCT_avg
 	def graphJavaAverageGCTime(self):
 		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Unit second",
-		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H",
+		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java Average GC Time",
+		"--color", "ARROW#FFFFFF", "--color", "AXIS#FFFFFF", "--color", "BACK#333333",
+		"--color", "CANVAS#333333", "--color", "FONT#FFFFFF", "--color", "FRAME#AAAAAA", 
+		"--color", "MGRID#CCCCCC", "--color", "SHADEA#000000", "--color", "SHADEB#111111",
 		"DEF:YGCT_avg="+self.rrdfile+":YGCT_avg:AVERAGE",
 		"DEF:FGCT_avg="+self.rrdfile+":FGCT_avg:AVERAGE",
 		"DEF:GCT_avg="+self.rrdfile+":GCT_avg:AVERAGE",
@@ -102,8 +108,11 @@ class RRDController(object):
 	#Old_ratio, S1_ratio, S0_ratio, Eden_ratio
 	def graphJavaS0S1EdenOldUsedPercentage(self):
 		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Percentage",
-		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H",
+		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java S0_S1_Eden_Old Used Percentage",
+		"--color", "ARROW#FFFFFF", "--color", "AXIS#FFFFFF", "--color", "BACK#333333",
+		"--color", "CANVAS#333333", "--color", "FONT#FFFFFF", "--color", "FRAME#AAAAAA", 
+		"--color", "MGRID#CCCCCC", "--color", "SHADEA#000000", "--color", "SHADEB#111111",
 		"DEF:Old_ratio="+self.rrdfile+":Old_ratio:AVERAGE",
 		"DEF:S1_ratio="+self.rrdfile+":S1_ratio:AVERAGE",
 		"DEF:S0_ratio="+self.rrdfile+":S0_ratio:AVERAGE",
@@ -135,8 +144,11 @@ class RRDController(object):
 	#YGC, FGC
 	def graphJavaGCEvents(self):
 		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Times",
-		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H",
+		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R","--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java GC Events",
+		"--color", "ARROW#FFFFFF", "--color", "AXIS#FFFFFF", "--color", "BACK#333333",
+		"--color", "CANVAS#333333", "--color", "FONT#FFFFFF", "--color", "FRAME#AAAAAA", 
+		"--color", "MGRID#CCCCCC", "--color", "SHADEA#000000", "--color", "SHADEB#111111",
 		"DEF:YGC="+self.rrdfile+":YGC:AVERAGE",
 		"DEF:FGC="+self.rrdfile+":FGC:AVERAGE",
 		"LINE1:YGC#0E0BEE:YGC",
@@ -155,8 +167,11 @@ class RRDController(object):
 		#YGCT,FGCT,CGT
 	def graphJavaAverageGCTime(self):
 		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Unit second",
-		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H",
+		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R","--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java Average GC Time",
+		"--color", "ARROW#FFFFFF", "--color", "AXIS#FFFFFF", "--color", "BACK#333333",
+		"--color", "CANVAS#333333", "--color", "FONT#FFFFFF", "--color", "FRAME#AAAAAA", 
+		"--color", "MGRID#CCCCCC", "--color", "SHADEA#000000", "--color", "SHADEB#111111",
 		"DEF:YGCT="+self.rrdfile+":YGCT:AVERAGE",
 		"DEF:FGCT="+self.rrdfile+":FGCT:AVERAGE",
 		"DEF:GCT="+self.rrdfile+":GCT:AVERAGE",
@@ -181,7 +196,7 @@ class RRDController(object):
 		#Heap_used,Heap_max,Heap_ratio
 	def graphJavaHeapMemory(self):
 		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=MBytes",
-		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R",
+		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java Heap Memory",
         "--right-axis-label", "Heap ratio",
 		"--right-axis", "1:0 ", 
@@ -218,7 +233,7 @@ class RRDController(object):
 			#Metadata_used,Metadata_max,Metadata_ratio
 	def graphJavaMetadataMemory(self):
 		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=MBytes",
-		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H",
+		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R","--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java Metadata Memory",
 		"--right-axis-label", "Metadata ratio",
 		"--right-axis", "1:0 ", 

@@ -6,11 +6,18 @@
 <title>Examples</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
-<link href="" rel="stylesheet">
+<link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='css/base.css') }}">
 </head>
 <body>
-{% if staticImg %}
-<img src="{{ url_for('static', filename = staticImg) }}" width="882" height="345">
-{% endif%}
+{% for staticImg in staticImg %}
+
+<div class='server-node'>
+			<ol class='graph'>
+				<li><img src="{{ url_for('static', filename = staticImg) }}" width="882" height="345"></li>
+			</ol>
+</div>
+
+
+{% endfor %}
 </body>
 </html>
