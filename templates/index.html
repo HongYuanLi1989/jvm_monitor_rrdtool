@@ -9,6 +9,8 @@
 <link href="" rel="stylesheet">
 </head>
 <body>
-    {{ data }}
+{% if staticImg %}
+<img src="{{ url_for('static', filename = staticImg) }}" width="882" height="345">
+{% endif%}
 </body>
 </html>

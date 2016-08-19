@@ -36,8 +36,7 @@ def utilData():
     ipAddress = str(data["ipaddress"])
     serviceName = str(data["Process_Name"])
     #jvmType = str(data["jvmType"])
-    rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (
-        ipAddress, serviceName, serviceName)
+    rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (ipAddress, serviceName, serviceName)
     #staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (ipAddress, serviceName, jvmType)
     staticFile = ''
     print "variable type"
@@ -54,7 +53,8 @@ def utilData():
     if os.path.isfile(rrdFile) is not True:
         rrd = rrd.create()
     print "recv data success"
-    result = rrd.update(rrdfile=rrdFile, YGCT_avg=float(data["YGCT_avg"]), Heap_used=float(data['Heap_used']),
+    print rrdFile
+    result = rrd.update(rrdfile=rrdFile, YGCT_avg=float(data['YGCT_avg']), Heap_used=float(data['Heap_used']),
                         S0_used=float(data['S0_used']), S0_max=float(data['S0_max']), S0_ratio=float(data['S0_ratio']),
                         S1_used=float(data['S1_used']), S1_max=float(data['S1_max']), S1_ratio=float(data['S1_ratio']),
                         Old_used=float(data['Old_used']), Old_max=float(data['Old_max']),
@@ -87,14 +87,17 @@ def getGraph():
     print type(rrdFile)
     staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (ipAddress, serviceName, jvmType)
     print type(staticFile)
+    print staticFile
     rrd = RRDController(rrdfile=rrdFile, static_path=staticFile)
     graphFunc = 'graph%s' %(jvmType)
     print graphFunc
     #graphFunc = 'rrd.%s' %(graphFunc)
     if hasattr(rrd,graphFunc):
         getattr(rrd,graphFunc)()
-    return "success"
-
+    #return "success"
+    displayImgName = "%s/%s/%s.png" %(ipAddress, serviceName, jvmType)
+    print displayImgName
+    return render_template('index.html', staticImg=displayImgName, mimetype='image/gif')
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
 

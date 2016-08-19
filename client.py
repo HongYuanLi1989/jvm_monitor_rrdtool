@@ -12,9 +12,10 @@ import sys
 import socket
 
 class Jprocess:
-    def __init__(self, arg):
+    def __init__(self, jpname, service_name):
         self.pdict = {
-        "jpname": arg,
+        "jpname": jpname,
+	"service_name": service_name,
         }
         self.zdict = {
         "Heap_used" : 0,
@@ -45,7 +46,9 @@ class Jprocess:
         "GCT_avg"   : 0,
         }
     def check_proc(self):
-        command = "ps aux | grep /data/deploy/apache-tomcat-7.0.69/conf/logging.properties | grep -v grep | awk '{print $2}'"
+	print self.pdict['jpname']
+        command = "ps aux | grep '"+ self.pdict['jpname'] +"' | grep -v grep | awk '{print $2}'"
+        print command
         pidout = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
         pid = pidout.stdout.readline().split("\n")
         self.pdict['pid'] = pid[0]
@@ -54,12 +57,12 @@ class Jprocess:
     def get_jstats(self):
         if self.pdict['pid'] == '':
             return False
-        #print self.pdict['pid']
+        print self.pdict['pid']
         self.pdict.update(self.fill_jstat("-gc"))
         self.pdict.update(self.fill_jstat("-gccapacity"))
         self.pdict.update(self.fill_jstat("-gcutil"))
     def fill_jstat(self, opts):
-        command = "/data/apps/jdk1.8.0_91/bin/jstat %s %s" %(opts, self.pdict['pid'])
+        command = "/data/apps/java/jdk1.8.0_45/bin/jstat %s %s" %(opts, self.pdict['pid'])
         jstatout = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
         stdout, stderr = jstatout.communicate()
         legend, data = stdout.split('\n',1)
@@ -92,7 +95,7 @@ class Jprocess:
         self.zdict['YGCT'] = format(float(self.pdict['YGCT']),'0.3f')
         self.zdict['FGCT'] = format(float(self.pdict['FGCT']),'0.3f')
         self.zdict['GCT'] = format(float(self.pdict['GCT']),'0.3f')
-        self.zdict['Process_Name'] = self.pdict['jpname']
+        self.zdict['Process_Name'] = self.pdict['service_name']
         self.zdict['ipaddress'] = socket.gethostbyname(socket.getfqdn(socket.gethostname()))
         if self.pdict['YGC'] == '0':
             self.zdict['YGCT_avg'] = '0'
@@ -108,17 +111,20 @@ class Jprocess:
             self.zdict['GCT_avg'] = format(float(self.pdict['GCT'])/(float(self.pdict['YGC']) + float(self.pdict['FGC'])),'0.3f')
 
 if __name__ == '__main__':
+    serviceName = {"com.zhangyu.trad.booter.ServiceSecurityMain":"zy-trad-service-security","com.zhangyu.trad.booter.TradPusherMain":"zy-trad-pusher","com.zhangyu.trad.booter.ServiceAccountMain":"zy-trad-service-account","com.zhangyu.trad.booter.ServiceMonitorMain":"zy-trad-service-monitor",	"com.zhangyu.trad.booter.ServicePrizeMain":"zy-trad-service-prize","com.zhangyu.trad.booter.TradTaskMain":"zy-trad-task","com.zhangyu.trad.booter.ServiceMatchMain":"zy-trad-service-match"}
+#    command = "ps aux | grep java| grep -v 'wrapper.script.version'| grep -v 'jstat' | grep -v grep | grep -v apache-tomcat| awk '{print $NF}'"
+#    pidout = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+#    pid = pidout.stdout.readlines()
+    print type(serviceName)
+    for item in serviceName:
+        jproc = Jprocess(jpname=item,service_name=serviceName[item])
+        pid = jproc.check_proc()
 
-    jproc = Jprocess("service_account")
-    pid = jproc.check_proc()
-
-    jproc.get_jstats()
-    jproc.compute_jstats()
-    zdict = jproc.zdict
-    print zdict
-    print "start report to server"
-
-	# #data = {"Process_Name": "service_account", "jvmType": "JAVA_S0_S1_Eden_Metadata", "GCT_avg": "0.010", "S1_max": "4194304.00", "S1_ratio": "0.00", "Old_max": "20971520.00", "Heap_max": "62914560.00", "YGCT_avg": "0.010", "FGCT_avg": "0", "FGC": "0", "Metadata_used": "15324364.80", "Heap_used": "26282803.20", "Eden_max": "33554432.00", "Old_used": "10134630.40", "Eden_used": "15132364.80", "YGC": "6", "ipaddress": "1102356884", "YGCT": "0.060", "Eden_ratio": "69.94", "S0_used": "0.00", "Metadata_max": "15990784.00", "FGCT": "0.000", "Old_ratio": "48.33", "Heap_ratio": "41.78", "S0_ratio": "87.26", "S1_used": "1015808.00", "S0_max": "4194304.00", "Metadata_ratio": "97.30", "GCT": "0.060"}
-    zdict = json.dumps(zdict)
-    res = requests.post("http://127.0.0.1:5000/upload/",data=zdict)
-    print res.text
+        jproc.get_jstats()
+        jproc.compute_jstats()
+        zdict = jproc.zdict
+        print zdict
+        print "start report to server"
+        zdict = json.dumps(zdict)
+        res = requests.post("http://192.168.0.107:5000/upload/",data=zdict)
+        print res.text

@@ -74,7 +74,7 @@ class RRDController(object):
 
 		#YGCT_avg,FGCT_avg,GCT_avg
 	def graphJavaAverageGCTime(self):
-		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Bytes",
+		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Unit second",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H",
 		"--width","785 ","--height","230","--title","Java Average GC Time",
 		"DEF:YGCT_avg="+self.rrdfile+":YGCT_avg:AVERAGE",
@@ -99,13 +99,13 @@ class RRDController(object):
 		"GPRINT:GCT_avg:MIN:Min\: %5.1lf %S\\n"
 		)
 
-	#Old_ratio, Heap_ratio, S0_ratio, Eden_ratio
+	#Old_ratio, S1_ratio, S0_ratio, Eden_ratio
 	def graphJavaS0S1EdenOldUsedPercentage(self):
-		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Bytes",
+		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Percentage",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H",
 		"--width","785 ","--height","230","--title","Java S0_S1_Eden_Old Used Percentage",
 		"DEF:Old_ratio="+self.rrdfile+":Old_ratio:AVERAGE",
-		"DEF:Heap_ratio="+self.rrdfile+":Heap_ratio:AVERAGE",
+		"DEF:S1_ratio="+self.rrdfile+":S1_ratio:AVERAGE",
 		"DEF:S0_ratio="+self.rrdfile+":S0_ratio:AVERAGE",
 		"DEF:Eden_ratio="+self.rrdfile+":Eden_ratio:AVERAGE",
 		"LINE1:Old_ratio#0E0BEE:Old_ratio",
@@ -114,11 +114,11 @@ class RRDController(object):
 		"GPRINT:Old_ratio:LAST:Current\: %5.1lf %S",
 		"GPRINT:Old_ratio:MIN:Min\: %5.1lf %S\\n",
 
-		"LINE1:Heap_ratio#00FF00:Heap_ratio",
-		"GPRINT:Heap_ratio:MAX:Max\: %5.1lf %S",
-		"GPRINT:Heap_ratio:AVERAGE:Avg\: %5.1lf %S",
-		"GPRINT:Heap_ratio:LAST:Current\: %5.1lf %S",
-		"GPRINT:Heap_ratio:MIN:Min\: %5.1lf %S\\n",
+		"LINE1:S1_ratio#00FF00:S1_ratio",
+		"GPRINT:S1_ratio:MAX:Max\: %5.1lf %S",
+		"GPRINT:S1_ratio:AVERAGE:Avg\: %5.1lf %S",
+		"GPRINT:S1_ratio:LAST:Current\: %5.1lf %S",
+		"GPRINT:S1_ratio:MIN:Min\: %5.1lf %S\\n",
 
 		"LINE1:S0_ratio#FF0000:S0_ratio",
 		"GPRINT:S0_ratio:MAX:Max\: %5.1lf %S",
@@ -134,7 +134,7 @@ class RRDController(object):
 		)
 	#YGC, FGC
 	def graphJavaGCEvents(self):
-		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Bytes",
+		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Times",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H",
 		"--width","785 ","--height","230","--title","Java GC Events",
 		"DEF:YGC="+self.rrdfile+":YGC:AVERAGE",
@@ -154,7 +154,7 @@ class RRDController(object):
 
 		#YGCT,FGCT,CGT
 	def graphJavaAverageGCTime(self):
-		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Bytes",
+		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Unit second",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H",
 		"--width","785 ","--height","230","--title","Java Average GC Time",
 		"DEF:YGCT="+self.rrdfile+":YGCT:AVERAGE",
@@ -217,27 +217,37 @@ class RRDController(object):
 
 			#Metadata_used,Metadata_max,Metadata_ratio
 	def graphJavaMetadataMemory(self):
-		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=Bytes",
+		rrdtool.graph(self.static_path,'--start','-1d',"--vertical-label=MBytes",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H",
 		"--width","785 ","--height","230","--title","Java Metadata Memory",
+		"--right-axis-label", "Metadata ratio",
+		"--right-axis", "1:0 ", 
+		"--color", "ARROW#FFFFFF", "--color", "AXIS#FFFFFF", "--color", "BACK#333333",
+		"--color", "CANVAS#333333", "--color", "FONT#FFFFFF", "--color", "FRAME#AAAAAA", 
+		"--color", "MGRID#CCCCCC", "--color", "SHADEA#000000", "--color", "SHADEB#111111",
+		"--right-axis-format", "%1.0lf",
 		"DEF:Metadata_used="+self.rrdfile+":Metadata_used:AVERAGE",
 		"DEF:Metadata_max="+self.rrdfile+":Metadata_max:AVERAGE",
 		"DEF:Metadata_ratio="+self.rrdfile+":Metadata_ratio:AVERAGE",
-		"AREA:Metadata_used#0E0BEE:Metadata_used",
+		"CDEF:Metadata_used_calc=Metadata_used,1000000,/",
+		"CDEF:Metadata_max_calc=Metadata_max,1000000,/",
+		"CDEF:Metadata_ratio_calc=Metadata_ratio,1,*",
+
+		"AREA:Metadata_used_calc#0E0BEE:Metadata_used",
 		"GPRINT:Metadata_used:MAX:Max\: %5.1lf %S",
 		"GPRINT:Metadata_used:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:Metadata_used:LAST:Current\: %5.1lf %S",
 		"GPRINT:Metadata_used:MIN:Min\: %5.1lf %S\\n",
 
-		"LINE1:Metadata_max#00FF00:Metadata_max",
+		"LINE1:Metadata_max_calc#00FF00:Metadata_max",
 		"GPRINT:Metadata_max:MAX:Max\: %5.1lf %S",
 		"GPRINT:Metadata_max:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:Metadata_max:LAST:Current\: %5.1lf %S",
 		"GPRINT:Metadata_max:MIN:Min\: %5.1lf %S\\n",
 
-		"LINE1:Metadata_ratio#FF0000:Metadata_ratio",
-		"GPRINT:Metadata_ratio:MAX:Max\: %5.1lf %S",
-		"GPRINT:Metadata_ratio:AVERAGE:Avg\: %5.1lf %S",
-		"GPRINT:Metadata_ratio:LAST:Current\: %5.1lf %S",
-		"GPRINT:Metadata_ratio:MIN:Min\: %5.1lf %S\\n"
+		"LINE1:Metadata_ratio_calc#FF0000:Metadata_ratio",
+		"GPRINT:Metadata_ratio:MAX:Max\: %1.1lf",
+		"GPRINT:Metadata_ratio:AVERAGE:Avg\: %1.1lf",
+		"GPRINT:Metadata_ratio:LAST:Current\: %1.1lf",
+		"GPRINT:Metadata_ratio:MIN:Min\: %1.1lf\\n"
 		)
