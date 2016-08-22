@@ -58,7 +58,7 @@ class Jprocess:
     def get_jstats(self):
         if self.pdict['pid'] == '':
             return False
-        print self.pdict['pid']
+        #print self.pdict['pid']
         self.pdict.update(self.fill_jstat("-gc"))
         self.pdict.update(self.fill_jstat("-gccapacity"))
         self.pdict.update(self.fill_jstat("-gcutil"))
@@ -71,7 +71,7 @@ class Jprocess:
         mydict = dict(zip(legend.split(), data.split()))
         #print mydict
         return mydict
-        
+
     def compute_jstats(self):
         if self.pdict['pid'] == "":
             return False
@@ -147,13 +147,22 @@ if __name__ == '__main__':
     for item in serviceName:
         jproc = Jprocess(jpname=item,service_name=serviceName[item])
         pid = jproc.check_proc()
-
-        jproc.get_jstats()
-        jproc.compute_jstats()
-        zdict = jproc.zdict
-        print zdict
-        print "start report to server"
-        zdict = json.dumps(zdict)
-        res = requests.post("http://192.168.0.107:5000/upload/",data=zdict)
-        print res.text
+        if pid == '':
+            print "pid is not valid value"
+            sys.exit(1)
+        if not jproc.get_jstats():
+            if not jproc.compute_jstats():
+                zdict = jproc.zdict
+                #print zdict
+                print "start report to server.........."
+                zdict = json.dumps(zdict)
+                try:
+                    res = requests.post("http://192.168.0.107:5000/upload/",data=zdict)
+                except requests.exceptions.RequestException as e:    # This is the correct syntax
+                    print e
+                    sys.exit(1)
+                print res.text
+            else:
+                print "get_jstatas failed!"
+                sys.exit(1)
         #time.sleep(1)
