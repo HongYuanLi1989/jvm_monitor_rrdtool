@@ -111,10 +111,35 @@ class Jprocess:
             self.zdict['GCT_avg'] = format(float(self.pdict['GCT'])/(float(self.pdict['YGC']) + float(self.pdict['FGC'])),'0.3f')
 
 if __name__ == '__main__':
-    serviceName = {"com.zhangyu.trad.booter.ServiceSecurityMain":"zy-trad-service-security","com.zhangyu.trad.booter.TradPusherMain":"zy-trad-pusher","com.zhangyu.trad.booter.ServiceAccountMain":"zy-trad-service-account","com.zhangyu.trad.booter.ServiceMonitorMain":"zy-trad-service-monitor",	"com.zhangyu.trad.booter.ServicePrizeMain":"zy-trad-service-prize","com.zhangyu.trad.booter.TradTaskMain":"zy-trad-task","com.zhangyu.trad.booter.ServiceMatchMain":"zy-trad-service-match"}
+#    serviceName = {"com.zhangyu.trad.booter.ServiceSecurityMain":"zy-trad-service-security","com.zhangyu.trad.booter.TradPusherMain":"zy-trad-pusher","com.zhangyu.trad.booter.ServiceAccountMain":"zy-trad-service-account","com.zhangyu.trad.booter.ServiceMonitorMain":"zy-trad-service-monitor",	"com.zhangyu.trad.booter.ServicePrizeMain":"zy-trad-service-prize","com.zhangyu.trad.booter.TradTaskMain":"zy-trad-task","com.zhangyu.trad.booter.ServiceMatchMain":"zy-trad-service-match","/data/deploy/dev-zy-trad-partner/apache-tomcat/bin/bootstrap.jar":"zy-trad-partner","/data/deploy/dev-zy-trad-admin/apache-tomcat/bin/bootstrap.jar":"zy-trad-admin"}
 #    command = "ps aux | grep java| grep -v 'wrapper.script.version'| grep -v 'jstat' | grep -v grep | grep -v apache-tomcat| awk '{print $NF}'"
 #    pidout = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
 #    pid = pidout.stdout.readlines()
+    def getJvmList():
+        service_dict = {}
+        for root,subFolders,files in os.walk("/data/deploy/"):
+            for filename in files:
+              if filename.find('.pid') !=-1 :
+                target_dir = root.split("/")[1:4]
+                for root,subFolders,files in os.walk("/"+"/".join(target_dir)):
+                  #print root,subFolders,files
+                  if "wrapper.conf" in files:
+                    #print files
+                    with open(os.path.join(root,"wrapper.conf")) as f:
+                      data = f.readlines()
+                      for item in data:
+                        if "wrapper.app.parameter.1" in item:
+                          jpname = item.split("=")[1].split("\n")[0]
+                          service_name = root.split("/")[3].replace("dev-","")
+                          service_dict.update({jpname:service_name})
+                  elif "catalina.sh" in files:
+                    #print files
+                    jpname = root+"/"+files[0]
+                    service_name =  root.split("/")[3].replace("dev-","")
+                    service_dict.update({jpname:service_name})
+        return service_dict
+    serviceName = getJvmList()
+    print serviceName
     print type(serviceName)
     for item in serviceName:
         jproc = Jprocess(jpname=item,service_name=serviceName[item])
@@ -128,3 +153,4 @@ if __name__ == '__main__':
         zdict = json.dumps(zdict)
         res = requests.post("http://192.168.0.107:5000/upload/",data=zdict)
         print res.text
+        #time.sleep(1)

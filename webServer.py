@@ -78,7 +78,7 @@ def utilData():
 # request example : http://127.0.0.1:5000/getgraph/?ip=192.168.11.129&jvmType=JavaHeapMemory&name=service_account
 
 def getGraph():
-    allType = ['JavaS0S1EdenOldMax','JavaAverageGCTime','JavaS0S1EdenOldUsedPercentage','JavaGCEvents','JavaAverageGCTime','JavaHeapMemory','JavaMetadataMemory']
+    allType = ['JavaS0S1EdenOldMax','JavaAverageGCTime','JavaS0S1EdenOldUsedPercentage','JavaGCEvents','JavaGCTime','JavaHeapMemory','JavaMetadataMemory']
     imglist= []
     ipAddress = str(request.args.get('ip'))
     jvmType = str(request.args.get('jvmType'))
