@@ -15,7 +15,7 @@ class Jprocess:
     def __init__(self, jpname, service_name):
         self.pdict = {
         "jpname": jpname,
-	"service_name": service_name,
+        "service_name": service_name,
         }
         self.zdict = {
         "Heap_used" : 0,
@@ -45,10 +45,11 @@ class Jprocess:
         "GCT"       : 0,
         "GCT_avg"   : 0,
         }
+
     def check_proc(self):
-	print self.pdict['jpname']
+        #print self.pdict['jpname']
         command = "ps aux | grep '"+ self.pdict['jpname'] +"' | grep -v grep | awk '{print $2}'"
-        print command
+        #print command
         pidout = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
         pid = pidout.stdout.readline().split("\n")
         self.pdict['pid'] = pid[0]
@@ -61,6 +62,7 @@ class Jprocess:
         self.pdict.update(self.fill_jstat("-gc"))
         self.pdict.update(self.fill_jstat("-gccapacity"))
         self.pdict.update(self.fill_jstat("-gcutil"))
+
     def fill_jstat(self, opts):
         command = "/data/apps/java/jdk1.8.0_45/bin/jstat %s %s" %(opts, self.pdict['pid'])
         jstatout = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
@@ -69,6 +71,7 @@ class Jprocess:
         mydict = dict(zip(legend.split(), data.split()))
         #print mydict
         return mydict
+        
     def compute_jstats(self):
         if self.pdict['pid'] == "":
             return False
@@ -139,8 +142,8 @@ if __name__ == '__main__':
                     service_dict.update({jpname:service_name})
         return service_dict
     serviceName = getJvmList()
-    print serviceName
-    print type(serviceName)
+    #print serviceName
+    #print type(serviceName)
     for item in serviceName:
         jproc = Jprocess(jpname=item,service_name=serviceName[item])
         pid = jproc.check_proc()
