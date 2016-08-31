@@ -78,7 +78,7 @@ def utilData():
 # request example : http://127.0.0.1:5000/getgraph/?ip=192.168.11.129&jvmType=JavaHeapMemory&name=service_account
 
 def getGraph():
-    allType = ['JavaS0S1EdenOldMax','JavaAverageGCTime','JavaS0S1EdenOldUsedPercentage','JavaGCEvents','JavaGCTime','JavaHeapMemory','JavaMetadataMemory']
+    allType = ['JavaS0S1EdenOldMax','JavaS0S1EdenOldUsedPercentage','JavaHeapMemory','JavaMetadataMemory','JavaGCEvents','JavaAverageGCTime', 'JavaGCTime']
     imglist= []
     ipAddress = str(request.args.get('ip'))
     jvmType = str(request.args.get('jvmType'))
@@ -115,12 +115,22 @@ def getGraph():
         print graphFunc
         if hasattr(rrd,graphFunc):
             getattr(rrd,graphFunc)()
-        displayImgName = "img/%s/%s/%s.png" %(ipAddress, serviceName, jvmType)
+        displayImgName = "img/jvmdata/%s/%s/%s.png" %(ipAddress, serviceName, jvmType)
         imglist.append(displayImgName)
         print imglist
         
     return render_template('index.html', staticImg=imglist, mimetype='image/gif')
 
+@app.route('/dashboard',methods=['get'])
+
+def dashboard():
+
+    return render_template('dashboard.html')
+    
+@app.route('/gethosttypelist',methods=['get'])
+
+def gethosttypelist():
+    pass
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

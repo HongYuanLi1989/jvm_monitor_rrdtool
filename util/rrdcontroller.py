@@ -20,7 +20,7 @@ class RRDController(object):
 	def create(self):
 		if os.path.isfile(self.rrdfile) is not True:
 			print self.rrdfile
-			self.rrd = rrdtool.create(self.rrdfile, '--step', '30', '--start',cur_time, 'DS:GCT_avg:GAUGE:120:0:U','DS:Eden_ratio:GAUGE:120:0:U','DS:S1_max:GAUGE:120:0:U','DS:S1_ratio:GAUGE:120:0:U',	'DS:Old_max:GAUGE:120:0:U',	'DS:Heap_max:GAUGE:120:0:U','DS:YGCT_avg:GAUGE:120:0:U','DS:FGCT_avg:GAUGE:120:0:U','DS:FGC:GAUGE:120:0:U',	'DS:Metadata_used:GAUGE:120:0:U','DS:Heap_used:GAUGE:120:0:U','DS:Eden_max:GAUGE:120:0:U','DS:Old_used:GAUGE:120:0:U','DS:Eden_used:GAUGE:120:0:U',	'DS:YGC:GAUGE:120:0:U',	'DS:YGCT:GAUGE:120:0:U','DS:S0_used:GAUGE:120:0:U',	'DS:Metadata_max:GAUGE:120:0:U','DS:FGCT:GAUGE:120:0:U','DS:Old_ratio:GAUGE:120:0:U','DS:Heap_ratio:GAUGE:120:0:U',	'DS:S0_ratio:GAUGE:120:0:U','DS:S1_used:GAUGE:120:0:U',	'DS:Metadata_ratio:GAUGE:120:0:U','DS:GCT:GAUGE:120:0:U','DS:S0_max:GAUGE:120:0:U',	'RRA:AVERAGE:0.5:1:2880','RRA:AVERAGE:0.5:30:672','RRA:AVERAGE:0.5:120:732','RRA:AVERAGE:0.5:720:1460',	'RRA:MIN:0.5:1:2880','RRA:MIN:0.5:30:672','RRA:MIN:0.5:120:732','RRA:MIN:0.5:720:1460','RRA:LAST:0.5:1:2880','RRA:LAST:0.5:30:672','RRA:LAST:0.5:120:732','RRA:LAST:0.5:720:1460',	'RRA:MAX:0.5:1:2880','RRA:MAX:0.5:30:672','RRA:MAX:0.5:120:732','RRA:MAX:0.5:720:1460')
+			self.rrd = rrdtool.create(self.rrdfile, '--step', '60', '--start',cur_time, 'DS:GCT_avg:GAUGE:120:0:U','DS:Eden_ratio:GAUGE:120:0:U','DS:S1_max:GAUGE:120:0:U','DS:S1_ratio:GAUGE:120:0:U',	'DS:Old_max:GAUGE:120:0:U',	'DS:Heap_max:GAUGE:120:0:U','DS:YGCT_avg:GAUGE:120:0:U','DS:FGCT_avg:GAUGE:120:0:U','DS:FGC:GAUGE:120:0:U',	'DS:Metadata_used:GAUGE:120:0:U','DS:Heap_used:GAUGE:120:0:U','DS:Eden_max:GAUGE:120:0:U','DS:Old_used:GAUGE:120:0:U','DS:Eden_used:GAUGE:120:0:U',	'DS:YGC:GAUGE:120:0:U',	'DS:YGCT:GAUGE:120:0:U','DS:S0_used:GAUGE:120:0:U',	'DS:Metadata_max:GAUGE:120:0:U','DS:FGCT:GAUGE:120:0:U','DS:Old_ratio:GAUGE:120:0:U','DS:Heap_ratio:GAUGE:120:0:U',	'DS:S0_ratio:GAUGE:120:0:U','DS:S1_used:GAUGE:120:0:U',	'DS:Metadata_ratio:GAUGE:120:0:U','DS:GCT:GAUGE:120:0:U','DS:S0_max:GAUGE:120:0:U',	'RRA:AVERAGE:0.5:1:2880','RRA:AVERAGE:0.5:30:672','RRA:AVERAGE:0.5:120:732','RRA:AVERAGE:0.5:720:1460',	'RRA:MIN:0.5:1:2880','RRA:MIN:0.5:30:672','RRA:MIN:0.5:120:732','RRA:MIN:0.5:720:1460','RRA:LAST:0.5:1:2880','RRA:LAST:0.5:30:672','RRA:LAST:0.5:120:732','RRA:LAST:0.5:720:1460',	'RRA:MAX:0.5:1:2880','RRA:MAX:0.5:30:672','RRA:MAX:0.5:120:732','RRA:MAX:0.5:720:1460')
 
 			if self.rrd:
 				print rrdtool.error()
@@ -41,7 +41,7 @@ class RRDController(object):
 
 	def graphJavaS0S1EdenOldMax(self,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=Bytes",
-		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R", "--no-gridfit","--slope-mode",
+		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java S0_S1_Eden_Old Max",
 		"--color", "ARROW#FFFFFF", "--color", "AXIS#FFFFFF", "--color", "BACK#333333",
 		"--color", "CANVAS#333333", "--color", "FONT#FFFFFF", "--color", "FRAME#AAAAAA", 
@@ -79,7 +79,7 @@ class RRDController(object):
 		#YGCT_avg,FGCT_avg,GCT_avg
 	def graphJavaAverageGCTime(self,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=Unit second",
-		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R", "--no-gridfit","--slope-mode",
+		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java Average GC Time",
 		"--color", "ARROW#FFFFFF", "--color", "AXIS#FFFFFF", "--color", "BACK#333333",
 		"--color", "CANVAS#333333", "--color", "FONT#FFFFFF", "--color", "FRAME#AAAAAA", 
@@ -109,7 +109,7 @@ class RRDController(object):
 	#Old_ratio, S1_ratio, S0_ratio, Eden_ratio
 	def graphJavaS0S1EdenOldUsedPercentage(self,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=Percentage",
-		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R", "--no-gridfit","--slope-mode",
+		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java S0_S1_Eden_Old Used Percentage",
 		"--color", "ARROW#FFFFFF", "--color", "AXIS#FFFFFF", "--color", "BACK#333333",
 		"--color", "CANVAS#333333", "--color", "FONT#FFFFFF", "--color", "FRAME#AAAAAA", 
@@ -118,25 +118,25 @@ class RRDController(object):
 		"DEF:S1_ratio="+self.rrdfile+":S1_ratio:AVERAGE",
 		"DEF:S0_ratio="+self.rrdfile+":S0_ratio:AVERAGE",
 		"DEF:Eden_ratio="+self.rrdfile+":Eden_ratio:AVERAGE",
-		"LINE2:Old_ratio#0E0BEE:Old_ratio",
+		"LINE1:Old_ratio#0E0BEE:Old_ratio",
 		"GPRINT:Old_ratio:MAX:Max\: %5.1lf %S",
 		"GPRINT:Old_ratio:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:Old_ratio:LAST:Current\: %5.1lf %S",
 		"GPRINT:Old_ratio:MIN:Min\: %5.1lf %S\\n",
 
-		"LINE2:S1_ratio#00FF00:S1_ratio",
+		"LINE1:S1_ratio#00FF00:S1_ratio",
 		"GPRINT:S1_ratio:MAX:Max\: %5.1lf %S",
 		"GPRINT:S1_ratio:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:S1_ratio:LAST:Current\: %5.1lf %S",
 		"GPRINT:S1_ratio:MIN:Min\: %5.1lf %S\\n",
 
-		"LINE2:S0_ratio#FF0000:S0_ratio",
+		"LINE1:S0_ratio#FF0000:S0_ratio",
 		"GPRINT:S0_ratio:MAX:Max\: %5.1lf %S",
 		"GPRINT:S0_ratio:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:S0_ratio:LAST:Current\: %5.1lf %S",
 		"GPRINT:S0_ratio:MIN:Min\: %5.1lf %S\\n",
 
-		"LINE2:Eden_ratio#FF8833:Eden_ratio",
+		"LINE1:Eden_ratio#FF8833:Eden_ratio",
 		"GPRINT:Eden_ratio:MAX:Max\: %5.1lf %S",
 		"GPRINT:Eden_ratio:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:Eden_ratio:LAST:Current\: %5.1lf %S",
@@ -145,7 +145,7 @@ class RRDController(object):
 	#YGC, FGC
 	def graphJavaGCEvents(self,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=Times",
-		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R","--no-gridfit","--slope-mode",
+		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H","--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java GC Events",
 		"--color", "ARROW#FFFFFF", "--color", "AXIS#FFFFFF", "--color", "BACK#333333",
 		"--color", "CANVAS#333333", "--color", "FONT#FFFFFF", "--color", "FRAME#AAAAAA", 
@@ -168,7 +168,7 @@ class RRDController(object):
 		#YGCT,FGCT,CGT
 	def graphJavaGCTime(self,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=Unit second",
-		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R","--no-gridfit","--slope-mode",
+		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H","--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java GC Time",
 		"--color", "ARROW#FFFFFF", "--color", "AXIS#FFFFFF", "--color", "BACK#333333",
 		"--color", "CANVAS#333333", "--color", "FONT#FFFFFF", "--color", "FRAME#AAAAAA", 
@@ -177,16 +177,16 @@ class RRDController(object):
 		"DEF:FGCT="+self.rrdfile+":FGCT:AVERAGE",
 		"DEF:GCT="+self.rrdfile+":GCT:AVERAGE",
 		"LINE1:YGCT#0E0BEE:YGCT",
-		"GPRINT:YGCT:MAX:Max\: %5.2lf %S",
-		"GPRINT:YGCT:AVERAGE:Avg\: %5.2lf %S",
-		"GPRINT:YGCT:LAST:Current\: %5.2lf %S",
-		"GPRINT:YGCT:MIN:Min\: %5.2lf %S\\n",
+		"GPRINT:YGCT:MAX:Max\: %5.3lf %S",
+		"GPRINT:YGCT:AVERAGE:Avg\: %5.3lf %S",
+		"GPRINT:YGCT:LAST:Current\: %5.3lf %S",
+		"GPRINT:YGCT:MIN:Min\: %5.3lf %S\\n",
 
 		"LINE1:FGCT#00FF00:FGCT",
-		"GPRINT:FGCT:MAX:Max\: %5.2lf %S",
-		"GPRINT:FGCT:AVERAGE:Avg\: %5.2lf %S",
-		"GPRINT:FGCT:LAST:Current\: %5.2lf %S",
-		"GPRINT:FGCT:MIN:Min\: %5.2lf %S\\n",
+		"GPRINT:FGCT:MAX:Max\: %5.3lf %S",
+		"GPRINT:FGCT:AVERAGE:Avg\: %5.3lf %S",
+		"GPRINT:FGCT:LAST:Current\: %5.3lf %S",
+		"GPRINT:FGCT:MIN:Min\: %5.3lf %S\\n",
 
 		"LINE1:GCT#FF0000:GCT",
 		"GPRINT:GCT:MAX:Max\: %5.1lf %S",
@@ -196,8 +196,8 @@ class RRDController(object):
 		)
 		#Heap_used,Heap_max,Heap_ratio
 	def graphJavaHeapMemory(self,period='-6h'):
-		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=MBytes",
-		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R", "--no-gridfit","--slope-mode",
+		rrdtool.graph(self.static_path,'--start',period,"--vertical-label= *10 MBytes",
+		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java Heap Memory",
         "--right-axis-label", "Heap ratio",
 		"--right-axis", "1:0 ", 
@@ -208,8 +208,8 @@ class RRDController(object):
 		"DEF:Heap_used="+self.rrdfile+":Heap_used:AVERAGE",
 		"DEF:Heap_max="+self.rrdfile+":Heap_max:AVERAGE",
 		"DEF:Heap_ratio="+self.rrdfile+":Heap_ratio:AVERAGE",
-		"CDEF:Heap_used_calc=Heap_used,1000000,/",
-		"CDEF:Heap_max_calc=Heap_max,1000000,/",
+		"CDEF:Heap_used_calc=Heap_used,10000000,/",
+		"CDEF:Heap_max_calc=Heap_max,10000000,/",
 		"CDEF:Heap_ratio_calc=Heap_ratio,1,*",
 
 		"AREA:Heap_used_calc#0E0BEE:Heap_used",
@@ -234,7 +234,7 @@ class RRDController(object):
 			#Metadata_used,Metadata_max,Metadata_ratio
 	def graphJavaMetadataMemory(self,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=MBytes",
-		"--x-grid","MINUTE:10:HOUR:1:MINUTE:120:0:%R","--no-gridfit","--slope-mode",
+		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H","--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java Metadata Memory",
 		"--right-axis-label", "Metadata ratio",
 		"--right-axis", "1:0 ", 
