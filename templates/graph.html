@@ -9,14 +9,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/fullcalendar.css') }}" /> 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/unicorn.main.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/unicorn.grey.css') }}" class="skin-color" />
-            
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  </head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /></head>
   <body>
     
     
     <div id="header">
-      <h1><a href="dashboard">JvmMemoryMoitor</a></h1>
+      <h1><a href="./dashboard">JvmMemoryMoitor</a></h1>
     </div>
     
     <div id="search">
@@ -31,6 +29,7 @@
     <div id="sidebar">
       <a href="#" class="visible-phone"><i class="icon icon-home"></i> Dashboard</a>
       <ul>
+
         <li class="active"><a href="dashboard"><i class="icon icon-home"></i> <span>Dashboard</span></a></li>
         
                 {% for hostname in hostlist %}
@@ -38,12 +37,30 @@
                     <a href="#"><i class="icon icon-th-list"></i> <span>{{ hostname }}</span> <span class="label">3</span></a>
                     <ul>
                     {% for pname in hostlist[hostname] %}
-                        <!-- <li><a href="getgraph/?ip={{ hostname }}&jvmType=&name={{ pname }}" >{{ pname }}</a></li> -->
-                        <li><a onclick="fillimgtag('getgraph/?ip={{ hostname }}&jvmType=&name={{ pname }}')">{{ pname }}</a></li>
+                        <li><a href="getgraph/?ip={{ hostname }}&jvmType=&name={{ pname }}">{{ pname }}</a></li>
                     {% endfor %}
                     </ul>
                     </li>
                 {% endfor %}
+         
+          <!-- <li class="submenu">
+
+          <a href="#"><i class="icon icon-th-list"></i> <span>主机地址</span> <span class="label">3</span></a>
+          <ul>
+            <li><a href="form-common.html">Common elements</a></li>
+            <li><a href="form-validation.html">Validation</a></li>
+            <li><a href="form-wizard.html">Wizard</a></li>
+          </ul>
+        </li> -->
+    <!--     <li class="submenu">
+          <a href="#"><i class="icon icon-file"></i> <span>主机地址</span> <span class="label">4</span></a>
+          <ul>
+            <li><a href="invoice.html">Invoice</a></li>
+            <li><a href="chat.html">Support chat</a></li>
+            <li><a href="calendar.html">Calendar</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+          </ul>
+        </li> -->
       </ul>
     
     </div>
@@ -73,19 +90,13 @@
               <div class="widget-content">
                 <div class="row-fluid">
                 <div class="span12">
-                <div id="list"></div>
-<!--                   {% for staticImg in staticImg %}
+                  {% for staticImg in staticImg %}
                     <div class='server-node'>
                           <ol class='graph'>
                             <li><img src="{{ url_for('static', filename = staticImg) }}" width="882" height="345"></li>
                           </ol>
                     </div>
-                  {% endfor %} -->
-                  <div class='server-node'>
-                    <ol class='graph'>
-                        <li><img src="{{ url_for('static', filename = staticImg) }}" width="882" height="345"></li>
-                    </ol>
-                  </div>
+                  {% endfor %}
                 </div>  
                 </div>              
               </div>
@@ -99,8 +110,6 @@
         </div>
       </div>
     </div>
-
-
             <script src="{{ url_for('static', filename='js/excanvas.min.js') }}"></script>
             <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
             <script src="{{ url_for('static', filename='js/jquery.ui.custom.js') }}"></script>
@@ -111,41 +120,5 @@
             <script src="{{ url_for('static', filename='js/fullcalendar.min.js') }}"></script>
             <script src="{{ url_for('static', filename='js/unicorn.js') }}"></script>
             <script src="{{ url_for('static', filename='js/unicorn.dashboard.js') }}"></script>
-
-                <script type="text/javascript">
-       function fillimgtag(url) {
-        $.ajax({
-            url: 'http://192.168.0.61:5000/'+url,
-            type: 'GET',
-            timeout: 1000,
-            cache: false,
-            beforeSend: LoadFunction, //加载执行方法 
-            error: erryFunction, //错误执行方法 
-            success: succFunction //成功执行方法 
-        })
-
-        function LoadFunction() {
-            $("#ddlist").html('加载中...');
-        }
-
-        function erryFunction() {
-            alert("error");
-        }
-
-        function succFunction(tt) {
-            $("#ddlist").html('');
-            alert("success");
-            data = tt + "";
-            adata = data.split(',');
-            for (var i = 0; i < adata.length; i++) {
-                // $("#list").html($("#list").html() + "<br>" + adata[i] + "<br/>");
-                // $(".graph img").attr("src",adata[i]); //accord class name 
-                $(".graph").append("<li><img src="+ adata[i] +" width=\"882\" height=\"345\"></li>");
-            }
-        }
-    }
-</script>       
-
-
   </body>
 </html>

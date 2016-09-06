@@ -7,17 +7,96 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='css/base.css') }}">
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<!-- get project name and host ip -->
+<!-- <script type="text/javascript"> 
+$(function () {
+    $.ajax({
+        url: 'http://192.168.0.61:5000/gethosttypelist',
+        type: 'GET',
+        dataType: 'json',
+        timeout: 1000,
+        cache: false,
+        beforeSend: LoadFunction, //加载执行方法 
+        error: erryFunction, //错误执行方法 
+        success: succFunction //成功执行方法 
+    })
+
+    function LoadFunction() {
+        $("#list").html('加载中...');
+    }
+
+    function erryFunction() {
+        alert("error");
+    }
+
+    function succFunction(tt) {
+        $("#list").html('');
+        alert("success")
+        var json = eval(tt); //数组   
+        $.each(json, function (index, item) {
+            $("#list").html($("#list").html() + "<br>" + index + "<br>" + item + "<br/>");
+            var item = item + '';
+            var myArray = item.split(',');
+
+            for (var i = 0; i < myArray.length; i++) {
+                $("#list").html($("#list").html() + "<br>" + myArray[i] + "<br/>");
+            }
+        });
+    }
+}); < /script> -->
+<!-- get imglist -->
+<script type="text/javascript">
+    $(function () {
+        $.ajax({
+            url: 'http://192.168.0.61:5000/getgraph/?ip=192.168.0.31&jvmType=&name=zy-trad-pusher',
+            type: 'GET',
+            timeout: 1000,
+            cache: false,
+            beforeSend: LoadFunction, //加载执行方法 
+            error: erryFunction, //错误执行方法 
+            success: succFunction //成功执行方法 
+        })
+
+        function LoadFunction() {
+            $("#ddlist").html('加载中...');
+        }
+
+        function erryFunction() {
+            alert("error");
+        }
+
+        function succFunction(tt) {
+            $("#ddlist").html('');
+            alert("success");
+            data = tt + "";
+            adata = data.split(',');
+            for (var i = 0; i < adata.length; i++) {
+                // $("#list").html($("#list").html() + "<br>" + adata[i] + "<br/>");
+                // $(".graph img").attr("src",adata[i]); //accord class name 
+                $(".graph").append("<li><img src="+ adata[i] +" width=\"882\" height=\"345\"></li>");
+            }
+        }
+    });
+</script>
+
 </head>
 <body>
-{% for staticImg in staticImg %}
+<!-- {% for staticImg in staticImg %}
 
 <div class='server-node'>
 			<ol class='graph'>
 				<li><img src="{{ url_for('static', filename = staticImg) }}" width="882" height="345"></li>
 			</ol>
 </div>
+{% endfor %} -->
+<div id="list"></div>
+<div id="ddlist"></div>
+<div class='server-node' id='imglist'>
+			<ol class='graph'>
+				<li><img src="" width="882" height="345"></li>
+			</ol>
+</div>
 
-
-{% endfor %}
 </body>
 </html>

@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-    return '<h1>Hello World!</h1>'
+    return render_template('index.html')
 
 
 def updateRRD():
@@ -28,7 +28,6 @@ def graphImage():
 
 
 @app.route('/upload/', methods=['POST'])
-
 def utilData():
     data = request.get_data()
     data = json.loads(data)
@@ -36,7 +35,8 @@ def utilData():
     ipAddress = str(data["ipaddress"])
     serviceName = str(data["Process_Name"])
     #jvmType = str(data["jvmType"])
-    rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (ipAddress, serviceName, serviceName)
+    rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (
+        ipAddress, serviceName, serviceName)
     #staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (ipAddress, serviceName, jvmType)
     staticFile = ''
     print "variable type"
@@ -73,13 +73,14 @@ def utilData():
 
     return "update data success"
 
+
 @app.route('/getgraph/', methods=["get"])
-
-# request example : http://127.0.0.1:5000/getgraph/?ip=192.168.11.129&jvmType=JavaHeapMemory&name=service_account
-
+# request example :
+# http://127.0.0.1:5000/getgraph/?ip=192.168.11.129&jvmType=JavaHeapMemory&name=service_account
 def getGraph():
-    allType = ['JavaS0S1EdenOldMax','JavaS0S1EdenOldUsedPercentage','JavaHeapMemory','JavaMetadataMemory','JavaGCEvents','JavaAverageGCTime', 'JavaGCTime']
-    imglist= []
+    allType = ['JavaS0S1EdenOldMax', 'JavaS0S1EdenOldUsedPercentage', 'JavaHeapMemory',
+               'JavaMetadataMemory', 'JavaGCEvents', 'JavaAverageGCTime', 'JavaGCTime']
+    imglist = []
     ipAddress = str(request.args.get('ip'))
     jvmType = str(request.args.get('jvmType'))
     serviceName = str(request.args.get('name'))
@@ -87,50 +88,73 @@ def getGraph():
     if jvmType == '':
         for jvmType in allType:
             print "for ....--------" + jvmType
-            rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (ipAddress, serviceName, serviceName)
-            staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (ipAddress, serviceName, jvmType)
+            rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (
+                ipAddress, serviceName, serviceName)
+            staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (
+                ipAddress, serviceName, jvmType)
             print staticFile
             rrd = RRDController(rrdfile=rrdFile, static_path=staticFile)
             print jvmType
-            graphFunc = 'graph%s' %(jvmType)
+            graphFunc = 'graph%s' % (jvmType)
             print graphFunc
-            print hasattr(rrd,graphFunc)
-            if hasattr(rrd,graphFunc):
-                print graphFunc+"will be runnnig........."
-                getattr(rrd,graphFunc)()
-                print graphFunc+"is running"
-            displayImgName = "img/%s/%s/%s.png" %(ipAddress, serviceName, jvmType)
+            print hasattr(rrd, graphFunc)
+            if hasattr(rrd, graphFunc):
+                print graphFunc + "will be runnnig........."
+                getattr(rrd, graphFunc)()
+                print graphFunc + "is running"
+            displayImgName = "img/%s/%s/%s.png" % (
+                ipAddress, serviceName, jvmType)
             print displayImgName
             imglist.append(displayImgName)
             print imglist
 
     else:
-        rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (ipAddress, serviceName, serviceName)
+        rrdFile = '/data/apps/jvm_monitor/%s/%s/%s.rrd' % (
+            ipAddress, serviceName, serviceName)
         print type(rrdFile)
-        staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (ipAddress, serviceName, jvmType)
+        staticFile = '/data/apps/jvm_monitor/%s/%s/%s.png' % (
+            ipAddress, serviceName, jvmType)
         print type(staticFile)
         print staticFile
         rrd = RRDController(rrdfile=rrdFile, static_path=staticFile)
-        graphFunc = 'graph%s' %(jvmType)
+        graphFunc = 'graph%s' % (jvmType)
         print graphFunc
-        if hasattr(rrd,graphFunc):
-            getattr(rrd,graphFunc)()
-        displayImgName = "img/jvmdata/%s/%s/%s.png" %(ipAddress, serviceName, jvmType)
+        if hasattr(rrd, graphFunc):
+            getattr(rrd, graphFunc)()
+        displayImgName = "img/jvmdata/%s/%s/%s.png" % (
+            ipAddress, serviceName, jvmType)
         imglist.append(displayImgName)
         print imglist
-        
-    return render_template('index.html', staticImg=imglist, mimetype='image/gif')
+    return ','.join(imglist)
+#    return render_template('index.html', staticImg=imglist, mimetype='image/gif')
 
-@app.route('/dashboard',methods=['get'])
 
+@app.route('/dashboard', methods=['get'])
 def dashboard():
+    data = []
+    for root, sub, file in os.walk('/root/jvm_monitor_rrdtool/static/img/jvm_data/'):
+        if file != []:
+            data.append(root.split('/')[-2:])
 
-    return render_template('dashboard.html')
-    
-@app.route('/gethosttypelist',methods=['get'])
+    hostlist = {}
+    for ip, pname in data:
+        hostlist.setdefault(ip, []).append(pname)
+    return render_template('dashboard.html',hostlist=hostlist)
 
+
+@app.route('/gethosttypelist', methods=['get'])
 def gethosttypelist():
-    pass
+
+    data = []
+    for root, sub, file in os.walk('/root/jvm_monitor_rrdtool/static/img/jvm_data/'):
+        if file != []:
+            data.append(root.split('/')[-2:])
+
+    hostlist = {}
+    for ip, pname in data:
+        hostlist.setdefault(ip, []).append(pname)
+    hostlist = json.dumps(hostlist)
+    return hostlist
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
