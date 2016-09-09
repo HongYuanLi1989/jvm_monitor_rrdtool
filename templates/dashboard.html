@@ -134,13 +134,16 @@
 
         function succFunction(tt) {
             $("#ddlist").html('');
-            alert("success");
             data = tt + "";
             adata = data.split(',');
+	    var timestamp = new Date().getTime();
+            $(".graph li").remove()
             for (var i = 0; i < adata.length; i++) {
                 // $("#list").html($("#list").html() + "<br>" + adata[i] + "<br/>");
                 // $(".graph img").attr("src",adata[i]); //accord class name 
-                $(".graph").append("<li><img src="+ adata[i] +" width=\"882\" height=\"345\"></li>");
+                //$(".graph li").remove()
+		//防止图片缓存不刷新
+                $(".graph").append("<li><img src="+ adata[i]+"?"+timestamp +" width=\"882\" height=\"345\"></li>");
             }
         }
     }

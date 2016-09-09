@@ -26,7 +26,7 @@
 	width:22em;
 }
 .server-node ul li{
-	float:left;
+	float:center;
 }
 .server-node ul li a{
 	display:block;

@@ -100,11 +100,11 @@ def getGraph():
             print hasattr(rrd, graphFunc)
             if hasattr(rrd, graphFunc):
                 print graphFunc + "will be runnnig........."
-                getattr(rrd, graphFunc)()
+                getattr(rrd, graphFunc)(ipAddress=ipAddress,serviceName=serviceName,period='-6h')
                 print graphFunc + "is running"
-            displayImgName = "img/%s/%s/%s.png" % (
+            displayImgName = "static/img/jvm_data/%s/%s/%s.png" % (
                 ipAddress, serviceName, jvmType)
-            print displayImgName
+            print "++++++++++++++++++++" + displayImgName
             imglist.append(displayImgName)
             print imglist
 
@@ -121,8 +121,9 @@ def getGraph():
         print graphFunc
         if hasattr(rrd, graphFunc):
             getattr(rrd, graphFunc)()
-        displayImgName = "img/jvmdata/%s/%s/%s.png" % (
+        displayImgName = "static/img/jvm_data/%s/%s/%s.png" % (
             ipAddress, serviceName, jvmType)
+        print "*******************************"+displayImgName
         imglist.append(displayImgName)
         print imglist
     return ','.join(imglist)
@@ -149,11 +150,12 @@ def gethosttypelist():
     for root, sub, file in os.walk('/root/jvm_monitor_rrdtool/static/img/jvm_data/'):
         if file != []:
             data.append(root.split('/')[-2:])
-
+    print data
     hostlist = {}
     for ip, pname in data:
         hostlist.setdefault(ip, []).append(pname)
     hostlist = json.dumps(hostlist)
+    print hostlist
     return hostlist
 
 if __name__ == '__main__':

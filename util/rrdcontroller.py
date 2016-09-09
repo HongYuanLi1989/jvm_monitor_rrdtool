@@ -39,7 +39,7 @@ class RRDController(object):
 		print GCT_avg, S1_max, S1_ratio, Old_max, Heap_max, YGCT_avg, FGCT_avg, FGC, Metadata_used, Heap_used, Eden_max, Old_used, Eden_used, YGC, YGCT, Eden_ratio, S0_used, Metadata_max, FGCT, Old_ratio, Heap_ratio, S0_ratio, S1_used, S0_max, Metadata_ratio, GCT
 		return self.update
 
-	def graphJavaS0S1EdenOldMax(self,period='-6h'):
+	def graphJavaS0S1EdenOldMax(self,ipAddress,serviceName,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=Bytes",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java S0_S1_Eden_Old Max",
@@ -73,11 +73,14 @@ class RRDController(object):
 		"GPRINT:Old_max:MAX:Max\: %5.1lf %S",
 		"GPRINT:Old_max:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:Old_max:LAST:Current\: %5.1lf %S",
-		"GPRINT:Old_max:MIN:Min\: %5.1lf %S\\n"
+		"GPRINT:Old_max:MIN:Min\: %5.1lf %S\\n",
+		"COMMENT: \\n" ,
+		"COMMENT:                    " ,
+		"COMMENT:"+ipAddress+" & "+serviceName+""
 		)
 
 		#YGCT_avg,FGCT_avg,GCT_avg
-	def graphJavaAverageGCTime(self,period='-6h'):
+	def graphJavaAverageGCTime(self,ipAddress,serviceName,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=Unit second",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java Average GC Time",
@@ -103,11 +106,14 @@ class RRDController(object):
 		"GPRINT:GCT_avg:MAX:Max\: %5.3lf %S",
 		"GPRINT:GCT_avg:AVERAGE:Avg\: %5.3lf %S",
 		"GPRINT:GCT_avg:LAST:Current\: %5.3lf %S",
-		"GPRINT:GCT_avg:MIN:Min\: %5.3lf %S\\n"
+		"GPRINT:GCT_avg:MIN:Min\: %5.3lf %S\\n",
+		"COMMENT: \\n" ,
+		"COMMENT:                    " ,
+		"COMMENT:"+ipAddress+" & "+serviceName+""
 		)
 
 	#Old_ratio, S1_ratio, S0_ratio, Eden_ratio
-	def graphJavaS0S1EdenOldUsedPercentage(self,period='-6h'):
+	def graphJavaS0S1EdenOldUsedPercentage(self,ipAddress,serviceName,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=Percentage",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java S0_S1_Eden_Old Used Percentage",
@@ -140,10 +146,13 @@ class RRDController(object):
 		"GPRINT:Eden_ratio:MAX:Max\: %5.1lf %S",
 		"GPRINT:Eden_ratio:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:Eden_ratio:LAST:Current\: %5.1lf %S",
-		"GPRINT:Eden_ratio:MIN:Min\: %5.1lf %S\\n"
+		"GPRINT:Eden_ratio:MIN:Min\: %5.1lf %S\\n",
+		"COMMENT: \\n" ,
+		"COMMENT:                    " ,
+		"COMMENT:"+ipAddress+" & "+serviceName+""
 		)
 	#YGC, FGC
-	def graphJavaGCEvents(self,period='-6h'):
+	def graphJavaGCEvents(self,ipAddress,serviceName,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=Times",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H","--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java GC Events",
@@ -162,11 +171,14 @@ class RRDController(object):
 		"GPRINT:FGC:MAX:Max\: %5.1lf %S",
 		"GPRINT:FGC:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:FGC:LAST:Current\: %5.1lf %S",
-		"GPRINT:FGC:MIN:Min\: %5.1lf %S\\n"
+		"GPRINT:FGC:MIN:Min\: %5.1lf %S\\n",
+		"COMMENT: \\n" ,
+		"COMMENT:                    " ,
+		"COMMENT:"+ipAddress+" & "+serviceName+""
 		)
 
 		#YGCT,FGCT,CGT
-	def graphJavaGCTime(self,period='-6h'):
+	def graphJavaGCTime(self,ipAddress,serviceName,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=Unit second",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H","--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java GC Time",
@@ -192,10 +204,13 @@ class RRDController(object):
 		"GPRINT:GCT:MAX:Max\: %5.1lf %S",
 		"GPRINT:GCT:AVERAGE:Avg\: %5.1lf %S",
 		"GPRINT:GCT:LAST:Current\: %5.1lf %S",
-		"GPRINT:GCT:MIN:Min\: %5.1lf %S\\n"
+		"GPRINT:GCT:MIN:Min\: %5.1lf %S\\n",
+		"COMMENT: \\n" ,
+		"COMMENT:                    " ,
+		"COMMENT:"+ipAddress+" & "+serviceName+""
 		)
 		#Heap_used,Heap_max,Heap_ratio
-	def graphJavaHeapMemory(self,period='-6h'):
+	def graphJavaHeapMemory(self,ipAddress,serviceName,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label= *10 MBytes",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H", "--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java Heap Memory",
@@ -228,11 +243,14 @@ class RRDController(object):
 		"GPRINT:Heap_ratio:MAX:Max\: %1.1lf",
 		"GPRINT:Heap_ratio:AVERAGE:Avg\: %1.1lf",
 		"GPRINT:Heap_ratio:LAST:Current\: %1.1lf",
-		"GPRINT:Heap_ratio:MIN:Min\: %1.1lf\\n"
+		"GPRINT:Heap_ratio:MIN:Min\: %1.1lf\\n",
+		"COMMENT: \\n" ,
+		"COMMENT:                    " ,
+		"COMMENT:"+ipAddress+" & "+serviceName+""
 		)
 
 			#Metadata_used,Metadata_max,Metadata_ratio
-	def graphJavaMetadataMemory(self,period='-6h'):
+	def graphJavaMetadataMemory(self,ipAddress,serviceName,period='-6h'):
 		rrdtool.graph(self.static_path,'--start',period,"--vertical-label=MBytes",
 		"--x-grid","MINUTE:12:HOUR:1:HOUR:1:0:%H","--no-gridfit","--slope-mode",
 		"--width","785 ","--height","230","--title","Java Metadata Memory",
@@ -265,5 +283,8 @@ class RRDController(object):
 		"GPRINT:Metadata_ratio:MAX:Max\: %1.1lf",
 		"GPRINT:Metadata_ratio:AVERAGE:Avg\: %1.1lf",
 		"GPRINT:Metadata_ratio:LAST:Current\: %1.1lf",
-		"GPRINT:Metadata_ratio:MIN:Min\: %1.1lf\\n"
+		"GPRINT:Metadata_ratio:MIN:Min\: %1.1lf\\n",
+		"COMMENT: \\n" ,
+		"COMMENT:                    " ,
+		"COMMENT:"+ipAddress+" & "+serviceName+""
 		)
